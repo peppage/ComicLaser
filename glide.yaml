@@ -1,0 +1,8 @@
+package: comiclaser
+import:
+- package: github.com/Sirupsen/logrus
+- package: github.com/jmoiron/sqlx
+- package: github.com/labstack/echo
+- package: github.com/mattn/go-sqlite3
+- package: github.com/pelletier/go-toml
+- package: github.com/rjeczalik/notify
