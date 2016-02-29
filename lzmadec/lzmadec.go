@@ -106,7 +106,6 @@ func getEntryLines(scanner *bufio.Scanner) ([]string, error) {
 		if s == "" {
 			break
 		}
-		log.Debug(s)
 		res = append(res, s)
 	}
 	err := scanner.Err()
