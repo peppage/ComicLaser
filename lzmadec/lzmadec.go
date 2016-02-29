@@ -1,3 +1,4 @@
+// Package lzmadec adapted from https://github.com/kjk/lzmadec
 package lzmadec
 
 import (
@@ -33,13 +34,13 @@ var (
 	detectionStateOf7z int // 0 - not checked, 1 - checked and present, 2 - checked and not present
 )
 
-// Archive describes a single .7z archive
+// Archive describes a single archive
 type Archive struct {
 	Path    string
 	Entries []Entry
 }
 
-// Entry describes a single file inside .7z archive
+// Entry describes a single file inside archive
 type Entry struct {
 	Path       string
 	Size       int
