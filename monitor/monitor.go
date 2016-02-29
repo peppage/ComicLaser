@@ -65,10 +65,19 @@ func visit(path string, f os.FileInfo, err error) error {
 			"f":    f,
 		}).Info("Visited")
 
-		mdl.CreateComic(mdl.Comic{
-			Path:   path,
-			Series: "test",
-		})
+		c, err := mdl.CreateComic(path)
+		if err != nil {
+			log.WithError(err).Error("Cannot create comic")
+			return err
+		}
+
+		c.FileName = f.Name()
+		c.Size = f.Size()
+
+		err = mdl.SaveComic(c)
+		if err != nil {
+			log.WithError(err).Error("Failed saving comic to DB")
+		}
 	}
 
 	return nil
