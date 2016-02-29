@@ -1,9 +1,12 @@
 package monitor
 
 import (
+	"os"
 	"path/filepath"
+	"time"
 
-	"comiclaser/lzmadec"
+	//"comiclaser/lzmadec"
+	mdl "comiclaser/model"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/rjeczalik/notify"
@@ -16,6 +19,7 @@ func Watch(folder string) {
 	// Make the channel buffered to ensure no event is dropped. Notify will drop
 	// an event if the receiver is not able to keep up the sending pace.
 	c := make(chan notify.EventInfo, 1)
+	timer := time.NewTimer(time.Second)
 
 	if err := notify.Watch(folder+"/...", c, notify.All); err != nil {
 		log.WithField("error", err).Panic("Failed to watch comic directory")
@@ -24,9 +28,17 @@ func Watch(folder string) {
 	defer notify.Stop(c)
 
 	for e := range c {
-		log.WithField("event", e).Debug("something moved in the folder")
-		if e.Event() == notify.Create {
-			dir, file := filepath.Split(e.Path())
+		log.WithField("event", e).Debug("folder event")
+		timer.Stop()
+		timer = time.NewTimer(time.Second * 5)
+		go func() {
+			<-timer.C
+			filepath.Walk(folder, visit) // timer expired
+		}()
+
+		/*if e.Event() == notify.Create {
+
+			/*dir, file := filepath.Split(e.Path())
 			log.WithFields(log.Fields{
 				"path": e.Path(),
 				"dir":  dir,
@@ -42,6 +54,22 @@ func Watch(folder string) {
 				}
 			}
 
-		}
+		}*/
 	}
+}
+
+func visit(path string, f os.FileInfo, err error) error {
+	if !f.IsDir() {
+		log.WithFields(log.Fields{
+			"path": path,
+			"f":    f,
+		}).Info("Visited")
+
+		mdl.CreateComic(mdl.Comic{
+			Path:   path,
+			Series: "test",
+		})
+	}
+
+	return nil
 }
