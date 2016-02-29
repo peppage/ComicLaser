@@ -13,10 +13,19 @@ func init() {
 	var err error
 	db, err = sqlx.Connect("sqlite3", "./comicdb2.sqlite")
 	if err != nil {
-		log.WithField("error", err).Panic("Cannot connect to database")
+		log.WithError(err).Panic("Cannot connect to database")
 	}
 }
 
+// SetupDb first time setup, creates tables if required.
 func SetupDb() {
+	tx := db.MustBegin()
 
+	tx.Exec(`CREATE TABLE IF NOT EXISTS comics (path TEXT PRIMARY KEY, series VARCHAR)`)
+
+	err := tx.Commit()
+	if err != nil {
+		tx.Rollback()
+		log.WithError(err).Error("DB setup failed.")
+	}
 }
