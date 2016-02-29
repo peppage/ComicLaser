@@ -1,12 +1,13 @@
 package model
 
 import (
+	"bytes"
 	"path/filepath"
+	"regexp"
+	"strconv"
 	"strings"
 
 	"ComicLaser/lzmadec"
-
-	log "github.com/Sirupsen/logrus"
 )
 
 type Comic struct {
@@ -27,11 +28,9 @@ func CreateComic(path string) (*Comic, error) {
 	}
 
 	c.Pages = len(a.Entries)
-	log.Debug(c.Pages)
-	if c.Pages > 0 {
-		pn := parseFileName(a.Entries[0].Path)
-		c.Series = pn.Series
-	}
+	pn := parseFileName(path)
+	c.Series = pn.Series
+	c.Issue = pn.Issue
 
 	return c, nil
 }
@@ -58,10 +57,26 @@ type parsedName struct {
 func parseFileName(path string) parsedName {
 	pn := parsedName{}
 	_, file := filepath.Split(path)
-	s := strings.Split(file, "(")
-	if len(s) > 0 {
-		pn.Series = strings.TrimSpace(s[0])
+
+	parens := regexp.MustCompile("\\(.*?\\)")
+
+	f := string(parens.ReplaceAll([]byte(file), []byte("")))
+
+	splits := strings.Split(f, " ")
+
+	issueLoc := 0
+	for i, v := range splits {
+		if j, err := strconv.ParseInt(v, 10, 32); err == nil {
+			pn.Issue = int(j)
+			issueLoc = i
+		}
 	}
+
+	var title bytes.Buffer
+	for i := 0; i < issueLoc; i++ {
+		title.WriteString(splits[i] + " ")
+	}
+	pn.Series = strings.TrimSpace(title.String())
 
 	return pn
 }
