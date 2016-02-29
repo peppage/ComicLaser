@@ -6,6 +6,7 @@ import (
 	"comiclaser/setting"
 
 	"net/http"
+	"strconv"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/labstack/echo"
@@ -13,17 +14,21 @@ import (
 
 func init() {
 	setting.Initialize()
-	log.SetLevel(7)
+	ll, err := log.ParseLevel(strconv.Itoa(setting.LogLevel))
+	if err == nil {
+		log.SetLevel(ll)
+	}
 }
 
 func main() {
-	mdl.SetupDb()
+	mdl.SetupDb(setting.DatabaseName)
 
 	go monitor.Watch(setting.ComicFolder)
 
 	e := echo.New()
 	e.Get("/", root)
-	e.Run(":8000")
+	log.Info("Server started on port " + setting.HttpPort)
+	e.Run(":" + setting.HttpPort)
 
 }
 
