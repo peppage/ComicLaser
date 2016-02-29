@@ -1,6 +1,10 @@
 package monitor
 
 import (
+	"path/filepath"
+
+	"comiclaser/lzmadec"
+
 	log "github.com/Sirupsen/logrus"
 	"github.com/rjeczalik/notify"
 )
@@ -21,5 +25,23 @@ func Watch(folder string) {
 
 	for e := range c {
 		log.WithField("event", e).Debug("something moved in the folder")
+		if e.Event() == notify.Create {
+			dir, file := filepath.Split(e.Path())
+			log.WithFields(log.Fields{
+				"path": e.Path(),
+				"dir":  dir,
+				"file": file,
+				"loc":  "./" + folder + "/" + file,
+			}).Debug("Opening comic file")
+			a, err := lzmadec.NewArchive("comics\\A-Force 003 (2015) (Digital) (Zone-Empire).cbr")
+			if err != nil {
+				log.WithField("error", err).Error("Failed to open archive")
+			} else {
+				for _, f := range a.Entries {
+					log.Debugf("name: %s, size: %d", f.Path, f.Size)
+				}
+			}
+
+		}
 	}
 }
