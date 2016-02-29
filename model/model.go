@@ -21,7 +21,8 @@ func init() {
 func SetupDb() {
 	tx := db.MustBegin()
 
-	tx.Exec(`CREATE TABLE IF NOT EXISTS comics (path TEXT PRIMARY KEY, series VARCHAR)`)
+	tx.Exec(`CREATE TABLE IF NOT EXISTS comics (path TEXT PRIMARY KEY, filename TEXT, series TEXT,
+            size INTEGER, pages INTEGER, issue INTEGER)`)
 
 	err := tx.Commit()
 	if err != nil {
