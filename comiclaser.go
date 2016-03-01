@@ -29,6 +29,7 @@ func main() {
 	e.Get("/", root)
 	e.Get("/dbinfo", dbinfo)
 	e.Get("/comic/:id", getComic)
+	e.Get("/comic/:id/page/:page", getPage)
 	log.Info("Server started on port " + setting.HttpPort)
 	e.Run(":" + setting.HttpPort)
 
@@ -68,4 +69,35 @@ func getComic(c *echo.Context) error {
 		1,
 	}
 	return c.JSON(http.StatusOK, data)
+}
+
+func getPage(c *echo.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		log.WithFields(log.Fields{
+			"error": err,
+			"id":    c.Param("id"),
+		}).Error("Invalid URL ID")
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid ID")
+	}
+
+	page, err := strconv.Atoi(c.Param("page"))
+	if err != nil {
+		log.WithFields(log.Fields{
+			"error": err,
+			"page":  c.Param("page"),
+		}).Error("Invalid URL page")
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid Page")
+	}
+
+	p, err := mdl.GetComicPage(id, page)
+
+	if err != nil {
+		log.WithError(err).Error("Problem getting page from db or archive")
+		return echo.NewHTTPError(http.StatusBadRequest, "Page doesn't exist")
+	}
+
+	c.Response().Header().Set("Content-Type", "image/jpeg")
+	c.Response().Write(p)
+	return nil
 }

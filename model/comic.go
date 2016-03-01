@@ -2,8 +2,10 @@ package model
 
 import (
 	"bytes"
+	"io"
 	"path/filepath"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -91,4 +93,30 @@ func GetComic(id int) (*[]Comic, error) {
 	}
 
 	return &c, nil
+}
+
+func GetComicPage(id int, page int) ([]byte, error) {
+	c := Comic{}
+	err := db.Get(&c, `SELECT * FROM comics WHERE id=$1`, id)
+	if err != nil {
+		return nil, err
+	}
+
+	a, err := lzmadec.NewArchive(c.Path)
+	if err != nil {
+		return nil, err
+	}
+
+	sort.Sort(lzmadec.ByPath(a.Entries))
+
+	r, err := a.GetFileReader(a.Entries[page].Path)
+	if err != nil {
+		return nil, err
+	}
+
+	var buf bytes.Buffer
+	_, _ = io.Copy(&buf, r)
+	r.Close()
+	return buf.Bytes(), nil
+
 }
