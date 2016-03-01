@@ -11,12 +11,13 @@ import (
 )
 
 type Comic struct {
-	Path     string
-	FileName string
-	Size     int64
-	Series   string
-	Pages    int
-	Issue    int
+	ID       int64  `json:"id"`
+	Path     string `json:"path"`
+	FileName string `json:"filaname"`
+	Size     int64  `json:"filesize"`
+	Series   string `json:"series"`
+	Pages    int    `json:"page_count"`
+	Issue    int    `json:"issue"`
 }
 
 // CreateComic given a path creates a comic struct.
@@ -79,4 +80,15 @@ func parseFileName(path string) parsedName {
 	pn.Series = strings.TrimSpace(title.String())
 
 	return pn
+}
+
+func GetComic(id int) (*[]Comic, error) {
+	c := []Comic{}
+
+	err := db.Select(&c, `SELECT * FROM comics WHERE id=$1`, id)
+	if err != nil {
+		return nil, err
+	}
+
+	return &c, nil
 }
