@@ -18,7 +18,7 @@ func init() {
 	var err error
 	config, err = toml.LoadFile("conf.toml")
 	if err != nil {
-		panic("Missing conf.toml")
+		panic("Error loading conf.toml " + err.Error())
 	}
 }
 
