@@ -5,7 +5,6 @@ import (
 	"path/filepath"
 	"time"
 
-	//"comiclaser/lzmadec"
 	mdl "comiclaser/model"
 
 	log "github.com/Sirupsen/logrus"
@@ -34,6 +33,7 @@ func Watch(folder string) {
 		go func() {
 			<-timer.C
 			filepath.Walk(folder, visit) // timer expired
+			mdl.DbUpdated()
 		}()
 
 		/*if e.Event() == notify.Create {

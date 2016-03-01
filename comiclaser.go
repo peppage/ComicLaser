@@ -27,6 +27,7 @@ func main() {
 
 	e := echo.New()
 	e.Get("/", root)
+	e.Get("/dbinfo", dbinfo)
 	log.Info("Server started on port " + setting.HttpPort)
 	e.Run(":" + setting.HttpPort)
 
@@ -34,4 +35,8 @@ func main() {
 
 func root(c *echo.Context) error {
 	return c.String(http.StatusOK, "st")
+}
+
+func dbinfo(c *echo.Context) error {
+	return c.JSON(http.StatusOK, mdl.GetDbInfo())
 }

@@ -1,6 +1,8 @@
 package model
 
 import (
+	"time"
+
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3" // required for sqlx
 
@@ -22,10 +24,18 @@ func SetupDb(dbName string) {
 
 	tx.Exec(`CREATE TABLE IF NOT EXISTS comics (path TEXT PRIMARY KEY, filename TEXT, series TEXT,
             size INTEGER, pages INTEGER, issue INTEGER)`)
+	tx.Exec(`CREATE TABLE IF NOT EXISTS dbinfo (name text PRIMARY KEY, value text)`)
 
 	err = tx.Commit()
 	if err != nil {
 		tx.Rollback()
 		log.WithError(err).Error("DB setup failed.")
+	}
+
+	var created int
+	db.Get(&created, `SELECT value FROM dbinfo WHERE name=$1`, "created")
+	if created == 0 {
+		db.Exec(`INSERT INTO dbinfo (name, value) VALUES ($1, $2)`, "created", time.Now().Unix())
+		db.Exec(`INSERT INTO dbinfo (name, value) VALUES ($1, $2)`, "last_update", time.Now().Unix())
 	}
 }
