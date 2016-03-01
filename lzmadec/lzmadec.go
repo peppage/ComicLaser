@@ -54,6 +54,12 @@ type Entry struct {
 	Folder     string
 }
 
+type ByPath []Entry
+
+func (e ByPath) Len() int           { return len(e) }
+func (e ByPath) Swap(i, j int)      { e[i], e[j] = e[j], e[i] }
+func (e ByPath) Less(i, j int) bool { return e[i].Path < e[j].Path }
+
 func detect7zCached() error {
 	mu.Lock()
 	defer mu.Unlock()
