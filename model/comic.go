@@ -88,11 +88,8 @@ func GetComic(id int) (*[]Comic, error) {
 	c := []Comic{}
 
 	err := db.Select(&c, `SELECT * FROM comics WHERE id=$1`, id)
-	if err != nil {
-		return nil, err
-	}
 
-	return &c, nil
+	return &c, err
 }
 
 func GetComicPage(id int, page int) ([]byte, error) {
@@ -119,4 +116,10 @@ func GetComicPage(id int, page int) ([]byte, error) {
 	r.Close()
 	return buf.Bytes(), nil
 
+}
+
+func GetAllComics() (*[]Comic, error) {
+	c := []Comic{}
+	err := db.Select(&c, `SELECT * FROM comics`)
+	return &c, err
 }

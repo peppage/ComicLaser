@@ -30,6 +30,7 @@ func main() {
 	e.Get("/dbinfo", dbinfo)
 	e.Get("/comic/:id", getComic)
 	e.Get("/comic/:id/page/:page", getPage)
+	e.Get("/comiclist", allComics)
 	log.Info("Server started on port " + setting.HttpPort)
 	e.Run(":" + setting.HttpPort)
 
@@ -65,8 +66,8 @@ func getComic(c *echo.Context) error {
 		Pages  int          `json:"page_count"`
 	}{
 		comics,
-		1,
-		1,
+		len(*comics),
+		len(*comics),
 	}
 	return c.JSON(http.StatusOK, data)
 }
@@ -100,4 +101,23 @@ func getPage(c *echo.Context) error {
 	c.Response().Header().Set("Content-Type", "image/jpeg")
 	c.Response().Write(p)
 	return nil
+}
+
+func allComics(c *echo.Context) error {
+	comics, err := mdl.GetAllComics()
+	if err != nil {
+		log.WithError(err).Error("Problem getting all comics")
+		return echo.NewHTTPError(http.StatusInternalServerError, "Unable to get all comics")
+	}
+	data := struct {
+		Comics *[]mdl.Comic `json:"comics"`
+		Total  int          `json:"total_count"`
+		Pages  int          `json:"page_count"`
+	}{
+		comics,
+		len(*comics),
+		len(*comics),
+	}
+	return c.JSON(http.StatusOK, data)
+
 }
