@@ -36,8 +36,8 @@ func SetupDb(dbName string) {
 	var created int
 	db.Get(&created, `SELECT value FROM dbinfo WHERE name=$1`, "created")
 	if created == 0 {
-		db.Exec(`INSERT INTO dbinfo (name, value) VALUES ($1, $2)`, "created", time.Now().Unix())
-		db.Exec(`INSERT INTO dbinfo (name, value) VALUES ($1, $2)`, "last_update", time.Now().Unix())
+		db.Exec(`INSERT INTO dbinfo (name, value) VALUES ($1, $2)`, "created", time.Now().Format("2006-01-02T15:04:05.999999"))
+		db.Exec(`INSERT INTO dbinfo (name, value) VALUES ($1, $2)`, "last_update", time.Now().Format("2006-01-02T15:04:05.999999"))
 		db.Exec(`insert INTO dbinfo (name, value) VALUES ($1, $2)`, "id", uuid.NewV4())
 	}
 }

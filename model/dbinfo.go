@@ -3,15 +3,15 @@ package model
 import "time"
 
 type DbInfo struct {
-	Created     int64  `json:"created"`
-	Updated     int64  `json:"last_updated"`
+	Created     string `json:"created"`
+	Updated     string `json:"last_updated"`
 	TotalComics int    `json:"comic_count"`
 	ID          string `json:"id"`
 }
 
 // DbUpdated sets that this is the time the database was last updated
 func DbUpdated() error {
-	_, err := db.Exec(`UPDATE dbinfo SET value=$1 WHERE name = $2`, time.Now().Unix(), "last_update")
+	_, err := db.Exec(`UPDATE dbinfo SET value=$1 WHERE name = $2`, time.Now().Format("2006-01-02T15:04:05.999999"), "last_update")
 	return err
 }
 
