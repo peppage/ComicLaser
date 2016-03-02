@@ -1,5 +1,5 @@
-hash: 5d430ae24c25d162bbae277dffd202ac005bd32acd63be58043889ec7b1c3c27
-updated: 2016-02-27T15:26:26.6753795-05:00
+hash: 5e7f65864ec9a419adaa7b210fa0c293bbaa9420c095713aa6bf2f8f1e15b459
+updated: 2016-03-01T23:22:31.7243431-05:00
 imports:
 - name: github.com/jmoiron/sqlx
   version: 398dd5876282499cdfd4cb8ea0f31a672abe9495
@@ -24,6 +24,8 @@ imports:
   version: fe63e9f76da815a9fe36e4b0644abb27fa86d81f
 - name: github.com/rjeczalik/notify
   version: efbcb15a545abd0c7d546f0a15f4115c713a4c59
+- name: github.com/satori/go.uuid
+  version: e673fdd4dea8a7334adbbe7f57b7e4b00bdc5502
 - name: github.com/Sirupsen/logrus
   version: 219c8cb75c258c552e999735be6df753ffc7afdc
 - name: golang.org/x/net

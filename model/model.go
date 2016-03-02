@@ -5,6 +5,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3" // required for sqlx
+	"github.com/satori/go.uuid"
 
 	log "github.com/Sirupsen/logrus"
 )
@@ -37,5 +38,6 @@ func SetupDb(dbName string) {
 	if created == 0 {
 		db.Exec(`INSERT INTO dbinfo (name, value) VALUES ($1, $2)`, "created", time.Now().Unix())
 		db.Exec(`INSERT INTO dbinfo (name, value) VALUES ($1, $2)`, "last_update", time.Now().Unix())
+		db.Exec(`insert INTO dbinfo (name, value) VALUES ($1, $2)`, "id", uuid.NewV4())
 	}
 }
