@@ -14,7 +14,7 @@ import (
 
 func init() {
 	setting.Initialize()
-	ll, err := log.ParseLevel(strconv.Itoa(setting.LogLevel))
+	ll, err := log.ParseLevel(setting.LogLevel)
 	if err == nil {
 		log.SetLevel(ll)
 	}
@@ -27,6 +27,11 @@ func main() {
 	go monitor.Watch(setting.ComicFolder)
 
 	e := echo.New()
+
+	if setting.ServerLogging {
+		e.Use(serverLogger())
+	}
+
 	e.Get("/", root)
 	e.Get("/dbinfo", dbinfo)
 	e.Get("/comic/:id", getComic)

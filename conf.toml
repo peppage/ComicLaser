@@ -1,7 +1,8 @@
 [server]
 comic_folder = "comics"
 http_port = "8000"
-log_level = 7
+log_level = "debug"
+server_logging = true
 
 [database]
 name = "comicdb2.sqlite"

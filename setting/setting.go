@@ -5,11 +5,12 @@ import (
 )
 
 var (
-	ComicFolder  string
-	HttpPort     string
-	LogLevel     int
-	DatabaseName string
-	config       *toml.TomlTree
+	ComicFolder   string
+	HttpPort      string
+	LogLevel      string
+	DatabaseName  string
+	ServerLogging bool
+	config        *toml.TomlTree
 )
 
 const APP_VER = "alpha1"
@@ -32,10 +33,14 @@ func Initialize() {
 	}
 
 	if config.Has("server.log_level") {
-		LogLevel = int(config.Get("server.log_level").(int64))
+		LogLevel = config.Get("server.log_level").(string)
 	}
 
 	if config.Has("database.name") {
 		DatabaseName = config.Get("database.name").(string)
+	}
+
+	if config.Has("server.server_logging") {
+		ServerLogging = config.Get("server.server_logging").(bool)
 	}
 }
