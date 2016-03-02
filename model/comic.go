@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"ComicLaser/lzmadec"
+	"comiclaser/lzmadec"
 )
 
 type Comic struct {
