@@ -23,6 +23,7 @@ func init() {
 func main() {
 	mdl.SetupDb(setting.DatabaseName)
 
+	monitor.Update(setting.ComicFolder)
 	go monitor.Watch(setting.ComicFolder)
 
 	e := echo.New()

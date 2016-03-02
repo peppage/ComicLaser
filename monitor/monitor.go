@@ -82,3 +82,8 @@ func visit(path string, f os.FileInfo, err error) error {
 
 	return nil
 }
+
+// Update goes through the folder and adds all found comics
+func Update(folder string) {
+	filepath.Walk(folder, visit)
+}
