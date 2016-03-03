@@ -13,7 +13,7 @@ var (
 	config        *toml.TomlTree
 )
 
-const APP_VER = "alpha1"
+const APP_VER = "alpha3"
 
 func init() {
 	var err error

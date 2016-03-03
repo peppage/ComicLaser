@@ -37,7 +37,7 @@ func main() {
 	e.Get("/comic/:id", getComic)
 	e.Get("/comic/:id/page/:page", getPage)
 	e.Get("/comiclist", allComics)
-	log.Info("Server started on port " + setting.HttpPort)
+	log.Info("Server (version " + setting.APP_VER + ") started on port " + setting.HttpPort)
 	e.Run(":" + setting.HttpPort)
 
 }
