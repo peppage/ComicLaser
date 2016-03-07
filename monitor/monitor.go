@@ -27,14 +27,22 @@ func Watch(folder string) {
 	defer notify.Stop(c)
 
 	for e := range c {
-		log.WithField("event", e).Debug("folder event")
-		timer.Stop()
-		timer = time.NewTimer(time.Second * 5)
-		go func() {
-			<-timer.C
-			filepath.Walk(folder, visit) // timer expired
-			mdl.DbUpdated()
-		}()
+		switch e.Event() {
+		case notify.Create:
+			log.WithField("event", e).Debug("folder create event")
+			timer.Stop()
+			timer = time.NewTimer(time.Second * 5)
+			go func() {
+				<-timer.C
+				filepath.Walk(folder, visit) // timer expired
+				mdl.DbUpdated()
+			}()
+			break
+		case notify.Remove:
+			log.WithField("event", e).Debug("folder remove event")
+
+			break
+		}
 
 		/*if e.Event() == notify.Create {
 
