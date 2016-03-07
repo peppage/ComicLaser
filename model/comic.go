@@ -123,3 +123,8 @@ func GetAllComics() (*[]Comic, error) {
 	err := db.Select(&c, `SELECT * FROM comics`)
 	return &c, err
 }
+
+func RemoveComic(id int64) error {
+	_, err := db.Exec(`DELETE FROM comics WHERE id=$1`, id)
+	return err
+}
