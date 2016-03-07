@@ -103,10 +103,13 @@ func Remove(folder string) {
 		log.WithError(err).Error("Unable to get comics from DB")
 		return
 	}
+
 	for _, c := range *comics {
-		if _, err := os.Stat(c.Path); os.IsNotExist(err) {
-			// path/to/whatever does not exist
-			mdl.RemoveComic(c.ID)
-		}
+		go func(c mdl.Comic) {
+			if _, err := os.Stat(c.Path); os.IsNotExist(err) {
+				// path/to/whatever does not exist
+				mdl.RemoveComic(c.ID)
+			}
+		}(c)
 	}
 }
