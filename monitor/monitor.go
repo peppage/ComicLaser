@@ -87,3 +87,18 @@ func visit(path string, f os.FileInfo, err error) error {
 func Update(folder string) {
 	filepath.Walk(folder, visit)
 }
+
+// Remove looks at all files in DB and removes if gone
+func Remove(folder string) {
+	comics, err := mdl.GetAllComics()
+	if err != nil {
+		log.WithError(err).Error("Unable to get comics from DB")
+		return
+	}
+	for _, c := range *comics {
+		if _, err := os.Stat(c.Path); os.IsNotExist(err) {
+			// path/to/whatever does not exist
+			mdl.RemoveComic(c.ID)
+		}
+	}
+}
