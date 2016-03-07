@@ -23,6 +23,7 @@ func init() {
 func main() {
 	mdl.SetupDb(setting.DatabaseName)
 
+	monitor.Remove(setting.ComicFolder)
 	monitor.Update(setting.ComicFolder)
 	go monitor.Watch(setting.ComicFolder)
 
