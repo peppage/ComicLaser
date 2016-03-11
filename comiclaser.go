@@ -4,6 +4,7 @@ import (
 	mdl "comiclaser/model"
 	"comiclaser/monitor"
 	"comiclaser/setting"
+	"path/filepath"
 
 	"net/http"
 	"strconv"
@@ -39,7 +40,7 @@ func main() {
 	e.Get("/comic/:id/page/:page", getPage)
 	e.Get("/comiclist", allComics)
 	e.Get("/folders", folders)
-	e.Get("/folders/:id", subFolders)
+	e.Get("/folders/*", subFolders)
 	log.Info("Server (version " + setting.APP_VER + ") started on port " + setting.HttpPort)
 	e.Run(":" + setting.HttpPort)
 
@@ -144,20 +145,15 @@ func folders(c *echo.Context) error {
 }
 
 func subFolders(c *echo.Context) error {
-	i := c.Param("id")
-	id, err := strconv.Atoi(i)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "Invalid ID")
-	}
+	n := c.Param("_*")
 
-	folders := getFolders(setting.ComicFolder)
-	subFolders := getSubFolders(i, folders[id].Name)
+	subFolders := getSubFolders(setting.ComicFolder, n)
 
 	data := struct {
 		Current string   `json:"current"`
 		Folders []folder `json:"folders"`
 	}{
-		folders[id].Name,
+		filepath.Join(setting.ComicFolder, n),
 		subFolders,
 	}
 

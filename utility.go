@@ -3,7 +3,6 @@ package main
 import (
 	"io/ioutil"
 	"path/filepath"
-	"strconv"
 )
 
 type folder struct {
@@ -19,8 +18,8 @@ func getFolders(path string) []folder {
 		if f.IsDir() {
 
 			t := folder{
-				URL:  "/folders/" + strconv.Itoa(len(folders)),
-				Name: filepath.Join(path, f.Name()),
+				URL:  "/folders/" + f.Name(),
+				Name: f.Name(),
 			}
 			folders = append(folders, t)
 		}
@@ -29,16 +28,16 @@ func getFolders(path string) []folder {
 	return folders
 }
 
-func getSubFolders(id string, path string) []folder {
+func getSubFolders(fullpath string, name string) []folder {
 	folders := []folder{}
 
-	files, _ := ioutil.ReadDir(path)
+	files, _ := ioutil.ReadDir(filepath.Join(fullpath, name))
 	for _, f := range files {
 		if f.IsDir() {
 
 			t := folder{
-				URL:  "/folders/" + id + "/" + f.Name(),
-				Name: filepath.Join(path, f.Name()),
+				URL:  "/folders/" + name + "/" + f.Name(),
+				Name: f.Name(),
 			}
 			folders = append(folders, t)
 		}
