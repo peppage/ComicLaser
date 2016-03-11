@@ -10,7 +10,7 @@ type folder struct {
 	Name string `json:"name"`
 }
 
-func getFolders(path string) []folder {
+func getStructure(path string) []folder {
 	folders := []folder{}
 
 	files, _ := ioutil.ReadDir(path)
@@ -28,7 +28,7 @@ func getFolders(path string) []folder {
 	return folders
 }
 
-func getSubFolders(fullpath string, name string) []folder {
+func getSubStructure(fullpath string, name string) []folder {
 	folders := []folder{}
 
 	files, _ := ioutil.ReadDir(filepath.Join(fullpath, name))

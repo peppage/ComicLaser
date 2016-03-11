@@ -133,7 +133,7 @@ func allComics(c *echo.Context) error {
 }
 
 func folders(c *echo.Context) error {
-	folders := getFolders(setting.ComicFolder)
+	folders := getStructure(setting.ComicFolder)
 	data := struct {
 		Current string   `json:"current"`
 		Folders []folder `json:"folders"`
@@ -147,7 +147,7 @@ func folders(c *echo.Context) error {
 func subFolders(c *echo.Context) error {
 	n := c.Param("_*")
 
-	subFolders := getSubFolders(setting.ComicFolder, n)
+	subFolders := getSubStructure(setting.ComicFolder, n)
 
 	data := struct {
 		Current string   `json:"current"`
