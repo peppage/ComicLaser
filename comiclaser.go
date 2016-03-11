@@ -38,6 +38,7 @@ func main() {
 	e.Get("/comic/:id", getComic)
 	e.Get("/comic/:id/page/:page", getPage)
 	e.Get("/comiclist", allComics)
+	e.Get("/folders", folders)
 	log.Info("Server (version " + setting.APP_VER + ") started on port " + setting.HttpPort)
 	e.Run(":" + setting.HttpPort)
 
@@ -127,4 +128,16 @@ func allComics(c *echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, data)
 
+}
+
+func folders(c *echo.Context) error {
+	folders := getFolders(setting.ComicFolder)
+	data := struct {
+		Current string   `json:"current"`
+		Folders []folder `json:"folders"`
+	}{
+		"",
+		folders,
+	}
+	return c.JSON(http.StatusOK, data)
 }
