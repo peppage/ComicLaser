@@ -3,6 +3,7 @@ package main
 import (
 	"io/ioutil"
 	"path/filepath"
+	"strings"
 )
 
 type folder struct {
@@ -10,8 +11,9 @@ type folder struct {
 	Name string `json:"name"`
 }
 
-func getStructure(path string) []folder {
+func getStructure(path string) ([]folder, int) {
 	folders := []folder{}
+	comicCount := 0
 
 	files, _ := ioutil.ReadDir(path)
 	for _, f := range files {
@@ -22,14 +24,17 @@ func getStructure(path string) []folder {
 				Name: f.Name(),
 			}
 			folders = append(folders, t)
+		} else if strings.Contains(f.Name(), "cbr") || strings.Contains(f.Name(), "cbz") {
+			comicCount++
 		}
 	}
 
-	return folders
+	return folders, comicCount
 }
 
-func getSubStructure(fullpath string, name string) []folder {
+func getSubStructure(fullpath string, name string) ([]folder, int) {
 	folders := []folder{}
+	comicCount := 0
 
 	files, _ := ioutil.ReadDir(filepath.Join(fullpath, name))
 	for _, f := range files {
@@ -40,8 +45,10 @@ func getSubStructure(fullpath string, name string) []folder {
 				Name: f.Name(),
 			}
 			folders = append(folders, t)
+		} else if strings.Contains(f.Name(), "cbr") || strings.Contains(f.Name(), "cbz") {
+			comicCount++
 		}
 	}
 
-	return folders
+	return folders, comicCount
 }

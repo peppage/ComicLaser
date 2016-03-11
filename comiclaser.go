@@ -133,13 +133,29 @@ func allComics(c *echo.Context) error {
 }
 
 func folders(c *echo.Context) error {
-	folders := getStructure(setting.ComicFolder)
+	folders, comicCount := getStructure(setting.ComicFolder)
+
+	comicListEndpoint := ""
+	if comicCount > 0 {
+		comicListEndpoint = "/comiclist?folder=" + setting.ComicFolder
+	}
+
+	comics := struct {
+		Count int    `json:"count"`
+		URL   string `json:"url_path"`
+	}{
+		comicCount,
+		comicListEndpoint,
+	}
+
 	data := struct {
-		Current string   `json:"current"`
-		Folders []folder `json:"folders"`
+		Current string      `json:"current"`
+		Folders []folder    `json:"folders"`
+		Comics  interface{} `json:"comics"`
 	}{
 		"",
 		folders,
+		comics,
 	}
 	return c.JSON(http.StatusOK, data)
 }
@@ -147,14 +163,29 @@ func folders(c *echo.Context) error {
 func subFolders(c *echo.Context) error {
 	n := c.Param("_*")
 
-	subFolders := getSubStructure(setting.ComicFolder, n)
+	subFolders, comicCount := getSubStructure(setting.ComicFolder, n)
+
+	comicListEndpoint := ""
+	if comicCount > 0 {
+		comicListEndpoint = "/comiclist?folder=" + filepath.Join(setting.ComicFolder, n)
+	}
+
+	comics := struct {
+		Count int    `json:"count"`
+		URL   string `json:"url_path"`
+	}{
+		comicCount,
+		comicListEndpoint,
+	}
 
 	data := struct {
-		Current string   `json:"current"`
-		Folders []folder `json:"folders"`
+		Current string      `json:"current"`
+		Folders []folder    `json:"folders"`
+		Comics  interface{} `json:"comics"`
 	}{
 		filepath.Join(setting.ComicFolder, n),
 		subFolders,
+		comics,
 	}
 
 	return c.JSON(http.StatusOK, data)
