@@ -39,6 +39,7 @@ func main() {
 	e.Get("/comic/:id/page/:page", getPage)
 	e.Get("/comiclist", allComics)
 	e.Get("/folders", folders)
+	e.Get("/folders/:id", subFolders)
 	log.Info("Server (version " + setting.APP_VER + ") started on port " + setting.HttpPort)
 	e.Run(":" + setting.HttpPort)
 
@@ -139,5 +140,26 @@ func folders(c *echo.Context) error {
 		"",
 		folders,
 	}
+	return c.JSON(http.StatusOK, data)
+}
+
+func subFolders(c *echo.Context) error {
+	i := c.Param("id")
+	id, err := strconv.Atoi(i)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid ID")
+	}
+
+	folders := getFolders(setting.ComicFolder)
+	subFolders := getSubFolders(i, folders[id].Name)
+
+	data := struct {
+		Current string   `json:"current"`
+		Folders []folder `json:"folders"`
+	}{
+		folders[id].Name,
+		subFolders,
+	}
+
 	return c.JSON(http.StatusOK, data)
 }

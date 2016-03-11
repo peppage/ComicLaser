@@ -12,7 +12,6 @@ type folder struct {
 }
 
 func getFolders(path string) []folder {
-
 	folders := []folder{}
 
 	files, _ := ioutil.ReadDir(path)
@@ -21,6 +20,24 @@ func getFolders(path string) []folder {
 
 			t := folder{
 				URL:  "/folders/" + strconv.Itoa(len(folders)),
+				Name: filepath.Join(path, f.Name()),
+			}
+			folders = append(folders, t)
+		}
+	}
+
+	return folders
+}
+
+func getSubFolders(id string, path string) []folder {
+	folders := []folder{}
+
+	files, _ := ioutil.ReadDir(path)
+	for _, f := range files {
+		if f.IsDir() {
+
+			t := folder{
+				URL:  "/folders/" + id + "/" + f.Name(),
 				Name: filepath.Join(path, f.Name()),
 			}
 			folders = append(folders, t)
