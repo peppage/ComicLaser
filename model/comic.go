@@ -16,6 +16,7 @@ type Comic struct {
 	ID       int64  `json:"id"`
 	Path     string `json:"path"`
 	FileName string `json:"filaname"`
+	Folder   string `json:"folder"`
 	Size     int64  `json:"filesize"`
 	Series   string `json:"series"`
 	Pages    int    `json:"page_count"`
@@ -42,8 +43,8 @@ func CreateComic(path string) (*Comic, error) {
 func SaveComic(c *Comic) error {
 
 	tx := db.MustBegin()
-	tx.Exec(`INSERT INTO comics (path, filename, series, size, pages, issue) VALUES ($1, $2, $3, $4, $5, $6)`,
-		c.Path, c.FileName, c.Series, c.Size, c.Pages, c.Issue)
+	tx.Exec(`INSERT INTO comics (path, filename, folder, series, size, pages, issue) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+		c.Path, c.FileName, c.Folder, c.Series, c.Size, c.Pages, c.Issue)
 	err := tx.Commit()
 	if err != nil {
 		tx.Rollback()

@@ -79,6 +79,7 @@ func visit(path string, f os.FileInfo, err error) error {
 			return err
 		}
 
+		c.Folder = filepath.Dir(path)
 		c.FileName = f.Name()
 		c.Size = f.Size()
 

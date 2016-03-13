@@ -23,8 +23,8 @@ func SetupDb(dbName string) {
 
 	tx := db.MustBegin()
 
-	tx.Exec(`CREATE TABLE IF NOT EXISTS comics (id INTEGER PRIMARY KEY, path TEXT, filename TEXT UNIQUE, series TEXT,
-            size INTEGER, pages INTEGER, issue INTEGER)`)
+	tx.Exec(`CREATE TABLE IF NOT EXISTS comics (id INTEGER PRIMARY KEY, path TEXT, filename TEXT UNIQUE, folder TEXT,
+            series TEXT, size INTEGER, pages INTEGER, issue INTEGER)`)
 	tx.Exec(`CREATE TABLE IF NOT EXISTS dbinfo (name text PRIMARY KEY, value text)`)
 
 	err = tx.Commit()
