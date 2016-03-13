@@ -119,9 +119,9 @@ func GetComicPage(id int, page int) ([]byte, error) {
 
 }
 
-func GetAllComics() (*[]Comic, error) {
+func GetAllComics(folder string) (*[]Comic, error) {
 	c := []Comic{}
-	err := db.Select(&c, `SELECT * FROM comics`)
+	err := db.Select(&c, `SELECT * FROM comics WHERE folder=$1`, folder)
 	return &c, err
 }
 

@@ -115,7 +115,12 @@ func getPage(c *echo.Context) error {
 }
 
 func comicList(c *echo.Context) error {
-	comics, err := mdl.GetAllComics()
+	f := c.Query("folder")
+	if f == "" {
+		f = setting.ComicFolder
+	}
+
+	comics, err := mdl.GetAllComics(f)
 	if err != nil {
 		log.WithError(err).Error("Problem getting all comics")
 		return echo.NewHTTPError(http.StatusInternalServerError, "Unable to get all comics")
