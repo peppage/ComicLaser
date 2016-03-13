@@ -39,7 +39,7 @@ func main() {
 	e.Get("/dbinfo", dbinfo)
 	e.Get("/comic/:id", getComic)
 	e.Get("/comic/:id/page/:page", getPage)
-	e.Get("/comiclist", allComics)
+	e.Get("/comiclist", comicList)
 	e.Get("/folders", folders)
 	e.Get("/folders/*", subFolders)
 	log.Info("Server (version " + setting.APP_VER + ") started on port " + setting.HttpPort)
@@ -114,7 +114,7 @@ func getPage(c *echo.Context) error {
 	return nil
 }
 
-func allComics(c *echo.Context) error {
+func comicList(c *echo.Context) error {
 	comics, err := mdl.GetAllComics()
 	if err != nil {
 		log.WithError(err).Error("Problem getting all comics")
