@@ -172,7 +172,7 @@ func subFolders(c *echo.Context) error {
 	comicListEndpoint := ""
 	if comicCount > 0 {
 		v := url.Values{}
-		v.Add("folder", setting.ComicFolder)
+		v.Add("folder", filepath.Join(setting.ComicFolder, n))
 
 		comicListEndpoint = "/comiclist?" + v.Encode()
 	}
