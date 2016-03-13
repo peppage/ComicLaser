@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 
 	"net/http"
+	"net/url"
 	"strconv"
 
 	log "github.com/Sirupsen/logrus"
@@ -137,7 +138,10 @@ func folders(c *echo.Context) error {
 
 	comicListEndpoint := ""
 	if comicCount > 0 {
-		comicListEndpoint = "/comiclist?folder=" + setting.ComicFolder
+		v := url.Values{}
+		v.Add("folder", setting.ComicFolder)
+
+		comicListEndpoint = "/comiclist?" + v.Encode()
 	}
 
 	comics := struct {
@@ -167,7 +171,10 @@ func subFolders(c *echo.Context) error {
 
 	comicListEndpoint := ""
 	if comicCount > 0 {
-		comicListEndpoint = "/comiclist?folder=" + filepath.Join(setting.ComicFolder, n)
+		v := url.Values{}
+		v.Add("folder", setting.ComicFolder)
+
+		comicListEndpoint = "/comiclist?" + v.Encode()
 	}
 
 	comics := struct {
