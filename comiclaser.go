@@ -118,8 +118,7 @@ func comicList(c *echo.Context) error {
 	f := c.Query("folder")
 	var comics *[]mdl.Comic
 	var err error
-	if f == "" {
-		f = setting.ComicFolder
+	if f != "" {
 		comics, err = mdl.GetAllComicsInFolder(f)
 	} else {
 		comics, err = mdl.GetAllComics()
