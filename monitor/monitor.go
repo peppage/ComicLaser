@@ -6,7 +6,6 @@ import (
 	"time"
 
 	mdl "comiclaser/model"
-	"comiclaser/setting"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/rjeczalik/notify"
@@ -100,7 +99,7 @@ func Update(folder string) {
 
 // Remove looks at all files in DB and removes if gone
 func Remove(folder string) {
-	comics, err := mdl.GetAllComics(setting.ComicFolder)
+	comics, err := mdl.GetAllComics()
 	if err != nil {
 		log.WithError(err).Error("Unable to get comics from DB")
 		return
