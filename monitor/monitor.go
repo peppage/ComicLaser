@@ -3,6 +3,7 @@ package monitor
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	mdl "comiclaser/model"
@@ -67,7 +68,7 @@ func Watch(folder string) {
 }
 
 func visit(path string, f os.FileInfo, err error) error {
-	if !f.IsDir() {
+	if !f.IsDir() && (strings.Contains(f.Name(), "cbr") || strings.Contains(f.Name(), "cbz")) {
 		log.WithFields(log.Fields{
 			"path": path,
 			"f":    f,
