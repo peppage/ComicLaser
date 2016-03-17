@@ -2,6 +2,7 @@ package main
 
 import (
 	"io/ioutil"
+	"net/url"
 	"path/filepath"
 	"strings"
 )
@@ -19,8 +20,9 @@ func getStructure(path string) ([]folder, int) {
 	for _, f := range files {
 		if f.IsDir() {
 
+			u, _ := UrlEncoded("/folders/" + f.Name())
 			t := folder{
-				URL:  "/folders/" + f.Name(),
+				URL:  u,
 				Name: f.Name(),
 			}
 			folders = append(folders, t)
@@ -40,8 +42,9 @@ func getSubStructure(fullpath string, name string) ([]folder, int) {
 	for _, f := range files {
 		if f.IsDir() {
 
+			u, _ := UrlEncoded("/folders/" + f.Name())
 			t := folder{
-				URL:  "/folders/" + name + "/" + f.Name(),
+				URL:  u,
 				Name: f.Name(),
 			}
 			folders = append(folders, t)
@@ -51,4 +54,13 @@ func getSubStructure(fullpath string, name string) ([]folder, int) {
 	}
 
 	return folders, comicCount
+}
+
+// UrlEncoded encodes a string like Javascript's encodeURIComponent()
+func UrlEncoded(str string) (string, error) {
+	u, err := url.Parse(str)
+	if err != nil {
+		return "", err
+	}
+	return u.String(), nil
 }
