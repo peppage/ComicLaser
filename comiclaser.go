@@ -142,34 +142,8 @@ func comicList(c *echo.Context) error {
 }
 
 func folders(c *echo.Context) error {
-	folders, comicCount := getStructure(setting.ComicFolder)
-
-	comicListEndpoint := ""
-	if comicCount > 0 {
-		v := url.Values{}
-		v.Add("folder", setting.ComicFolder)
-
-		comicListEndpoint = "/comiclist?" + v.Encode()
-	}
-
-	comics := struct {
-		Count int    `json:"count"`
-		URL   string `json:"url_path"`
-	}{
-		comicCount,
-		comicListEndpoint,
-	}
-
-	data := struct {
-		Current string      `json:"current"`
-		Folders []folder    `json:"folders"`
-		Comics  interface{} `json:"comics"`
-	}{
-		"",
-		folders,
-		comics,
-	}
-	return c.JSON(http.StatusOK, data)
+	folder, _ := mdl.GetFolderData(setting.ComicFolder, "")
+	return c.JSON(http.StatusOK, folder)
 }
 
 func subFolders(c *echo.Context) error {
