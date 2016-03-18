@@ -33,6 +33,7 @@ func GetFolderData(base string, path string) (ComicFolder, error) {
         WHERE folder LIKE $1 GROUP BY folder ORDER BY folder`, base+path+"%", base+path)
 
 	var cfolder ComicFolder
+	subFolderNames := make(map[string]int)
 	for _, v := range f {
 
 		if v.Name == base {
@@ -43,15 +44,20 @@ func GetFolderData(base string, path string) (ComicFolder, error) {
 			cfolder.Count = v.ComicCount
 			cfolder.URL = "/comiclist?" + uv.Encode()
 		} else {
-			baseRemoved := strings.Replace(v.Name, base, "", -1)
-			slashRemoved := strings.Replace(baseRemoved, "\\", "", -1)
-			u, _ := urlEncoded(slashRemoved)
-			cfolder.Folders = append(cfolder.Folders, Folder{
-				URL:  "/folders/" + u,
-				Name: slashRemoved,
-			})
+			baseRemoved := strings.Replace(v.Name, base+"\\"+path, "", -1)
+			splits := strings.Split(baseRemoved, "\\")
+			subFolderNames[splits[0]] = 0
+
 		}
 	}
+	for k := range subFolderNames {
+		u, _ := urlEncoded(k)
+		cfolder.Folders = append(cfolder.Folders, Folder{
+			URL:  "/folders/" + u,
+			Name: k,
+		})
+	}
+
 	return cfolder, err
 }
 
