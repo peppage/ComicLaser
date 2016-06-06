@@ -76,7 +76,10 @@ func visit(path string, f os.FileInfo, err error) error {
 
 		c, err := mdl.CreateComic(path)
 		if err != nil {
-			log.WithError(err).Error("Cannot create comic")
+			log.WithFields(log.Fields{
+				"err":  err,
+				"File": f.Name(),
+			}).Error("Failed to create comic")
 			return err
 		}
 
